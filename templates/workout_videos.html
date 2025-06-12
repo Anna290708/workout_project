@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Create personalized workout plans easily and stay motivated with our app." />
+  <title>Workout Videos</title>
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* Your existing styles (header, container, logo, nav, video grid, etc.) */
+    header {
+      background-color: #1f2937; /* Darker navy */
+      color: #fff;
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 999;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo a {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: 2px;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+    .logo a:hover {
+      color: #4ade80; /* light green */
+    }
+    nav form button {
+      background-color: #4ade80;
+      color: #1f2937;
+      font-weight: 700;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    nav form button:hover {
+      background-color: #22c55e;
+      color: white;
+    }
+    nav ul {
+      display: flex;
+      gap: 1.8rem;
+      list-style: none;
+    }
+    nav a {
+      color: #d1d5db;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      user-select: none;
+    }
+    nav a:hover, nav a:focus {
+      background-color: #4ade80;
+      color: #1f2937;
+      outline: none;
+    }
+    nav .btn-nav {
+      background-color: #4ade80;
+      color: #1f2937;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+    nav .btn-nav:hover {
+      background-color: #22c55e;
+      color: white;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+    }
+    .video-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .video-card:hover {
+      transform: translateY(-5px);
+    }
+    .video-card iframe {
+      width: 100%;
+      height: 220px;
+      border: none;
+    }
+    .video-card .content {
+      padding: 1rem;
+    }
+    .filter-form {
+      text-align: center;
+      margin-top: 6rem; /* below fixed header */
+    }
+    .filter-form input, .filter-form select {
+      padding: 0.5rem;
+      margin: 0.5rem;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header with Navigation -->
+  <header class="header">
+    <div class="container">
+      <div class="logo"><a href="{% url 'home' %}">Workout Generator</a></div>
+      <nav class="nav">
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="{% url 'generate-form' %}">Workouts</a></li>
+          <li><a href="{% url 'videos' %}">videos</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            <li>
+              <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="nav-logout-btn">Logout</button>
+              </form>
+            </li>
+          {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'register' %}" class="btn-nav">Register</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </header>
+  
+  <section class="hero" style="margin-top: 5rem;">
+    <div>
+      <h1 style="font-size: 3rem;">Workout Video Library</h1>
+      <p style="font-size: 1.2rem;">Search or filter to find your favorite workouts</p>
+    </div>
+  </section>
+
+  <div class="filter-form">
+    <form method="get">
+      {{ form.search }}
+      {{ form.type }}
+      {{ form.difficulty }}
+      <button type="submit">Apply</button>
+    </form>
+  </div>
+
+ 
+
+  <section id="youtube-workouts">
+    <h2 style="text-align:center; margin-top: 3rem;">YouTube Workout Videos</h2>
+    <div class="video-grid">
+      {% for video in youtube_videos %}
+        <div class="video-card">
+          <iframe src="{{ video.embed_url }}" title="{{ video.title }}" allowfullscreen></iframe>
+          <div class="content">
+            <h3>{{ video.title }}</h3>
+            <p>{{ video.description }}</p>
+          </div>
+        </div>
+      {% empty %}
+        <p style="text-align:center; font-size: 1.2rem;">No YouTube videos found.</p>
+      {% endfor %}
+    </div>
+  </section>
+</body>
+</html>

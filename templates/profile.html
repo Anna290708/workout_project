@@ -1,0 +1,209 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile - Home Workout</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+     header {
+      background-color: #1f2937; /* Darker navy */
+      color: #fff;
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 999;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo a {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: 2px;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+    .logo a:hover {
+      color: #4ade80; /* light green */
+    }
+    nav form button {
+    background-color: #4ade80;
+    color: #1f2937;
+    font-weight: 700;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  nav form button:hover {
+    background-color: #22c55e;
+    color: white;
+}
+    nav ul {
+      display: flex;
+      gap: 1.8rem;
+      list-style: none;
+    }
+
+    nav a {
+      color: #d1d5db;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      user-select: none;
+    }
+    nav a:hover, nav a:focus {
+      background-color: #4ade80;
+      color: #1f2937;
+      outline: none;
+    }
+
+    nav .btn-nav {
+      background-color: #4ade80;
+      color: #1f2937;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+    nav .btn-nav:hover {
+      background-color: #22c55e;
+      color: white;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+      margin: 0;
+      padding: 2rem;
+    }
+
+    .container1 {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      margin-top: 100px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    .profile-item {
+      margin-bottom: 1rem;
+    }
+
+    .profile-label {
+      font-weight: bold;
+      color: #555;
+    }
+
+    .logout {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .logout button {
+      background-color: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .logout button:hover {
+      background-color: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="logo"><a href="{% url 'home' %}">Workout Generator</a></div>
+      <nav class="nav">
+        <ul>
+          <li><a href="{% url 'home' %}#features">Features</a></li>
+          <li><a href="{% url 'generate-form' %}">Workouts</a></li>
+          <li><a href="{% url 'videos' %}">videos</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            <li>
+              <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+              </form>
+            </li>
+          {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'register' %}" class="btn-nav">Register</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container1">
+    <h2>My Profile</h2>
+    <div class="profile-item">
+      <span class="profile-label">Username:</span>
+      <span>{{ user.username }}</span>
+    </div>
+    <div class="profile-item">
+      <span class="profile-label">Email:</span>
+      <span>{{ user.email }}</span>
+    </div>
+
+    <div class="logout">
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+      </form>
+    </div>
+    <h3>Workout History</h3>
+{% if workouts %}
+  <ul>
+    {% for workout in workouts %}
+      <li>
+        <strong>{{ workout }}</strong> - {{ workout.date_created|date:"M d, Y H:i" }} - Duration: {{ workout.duration }} mins
+        <ul>
+          {% for exercise in workout.exercises.all %}
+            <li>{{ exercise.name }} ({{ exercise.get_category_display }}, {{ exercise.get_difficulty_display }})</li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No workouts yet. Get started!</p>
+{% endif %}
+  </div>
+</body>
+</html>

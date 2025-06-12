@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Create personalized workout plans easily and stay motivated with our app." />
+  <title>Home Workout Generator</title>
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    
+    header {
+      background-color: #1f2937; /* Darker navy */
+      color: #fff;
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 999;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo a {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: 2px;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+    .logo a:hover {
+      color: #4ade80; /* light green */
+    }
+    nav form button {
+    background-color: #4ade80;
+    color: #1f2937;
+    font-weight: 700;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  nav form button:hover {
+    background-color: #22c55e;
+    color: white;
+}
+    nav ul {
+      display: flex;
+      gap: 1.8rem;
+      list-style: none;
+    }
+
+    nav a {
+      color: #d1d5db;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      user-select: none;
+    }
+    nav a:hover, nav a:focus {
+      background-color: #4ade80;
+      color: #1f2937;
+      outline: none;
+    }
+
+    nav .btn-nav {
+      background-color: #4ade80;
+      color: #1f2937;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+    nav .btn-nav:hover {
+      background-color: #22c55e;
+      color: white;
+    }
+
+    .hero {
+      height: 100vh;
+      background-image: url("../static/images/pexels-karolina-grabowska-4397831.jpg");
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+}
+  </style>
+</head>
+
+<body>
+
+  <!-- Header with Navigation -->
+  <header class="header">
+    <div class="container">
+      <div class="logo"><a href="{% url 'home' %}">Workout Generator</a></div>
+      <nav class="nav">
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="{% url 'generate-form' %}">Workouts</a></li>
+          <li><a href="{% url 'videos' %}">videos</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            <li>
+              <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="nav-logout-btn">Logout</button>
+              </form>
+            </li>
+          {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'register' %}" class="btn-nav">Register</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="overlay"></div>
+    <div class="content">
+      <h1>Get Fit. Stay Strong. 💪</h1>
+      <p>Create your personalized workout plan in seconds.</p>
+      {% if user.is_authenticated %}
+        <a href="{% url 'generate-form' %}" class="btn">Start Workout</a>
+      {% else %}
+        <a href="{% url 'register' %}" class="btn">Get Started</a>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <h2>How It Works</h2>
+    <div class="feature-cards">
+      <div class="card">
+        <div style="font-size: 2.5rem;">🎯</div>
+        <h3>Pick Your Goals</h3>
+        <p>Select body area, difficulty, and workout duration.</p>
+      </div>
+      <div class="card">
+        <div style="font-size: 2.5rem;">⚙️</div>
+        <h3>Get a Plan</h3>
+        <p>We'll generate a perfect routine tailored just for you.</p>
+      </div>
+      <div class="card">
+        <div style="font-size: 2.5rem;">💥</div>
+        <h3>Stay Motivated</h3>
+        <p>Read quotes that inspire and track your progress.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Workout Categories -->
+  <section class="categories" id="categories">
+    <h2>Workout Categories</h2>
+    <div class="category-grid">
+      <div class="category">💪 Arms</div>
+      <div class="category">🦵 Legs</div>
+      <div class="category">❤️ Cardio</div>
+      <div class="category">🧘 Yoga</div>
+      <div class="category">✨ Pilates</div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials" id="testimonials">
+    <h2>What Users Say</h2>
+    <div class="testimonial">
+      <p>"This app got me moving again! The plans are simple, effective, and fun."</p>
+      <span>– Tekla, 16</span>
+    </div>
+    <div class="testimonial">
+      <p>"I love how quick it is to get a workout plan. I use it every day!"</p>
+      <span>– George, 18</span>
+    </div>
+  </section>
+
+  <!-- Motivational Quote -->
+  <section class="quote-section">
+    <blockquote>"Push yourself, because no one else is going to do it for you." 🔥</blockquote>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta">
+    <h2>Start Workout Now!</h2>
+    <p class="sum">Already have an account? Log in and get moving!</p>
+    {% if user.is_authenticated %}
+      <a href="{% url 'generate-form' %}" class="btn cta-btn">Generate Workout</a>
+    {% else %}
+      <a href="{% url 'register' %}" class="btn cta-btn">Sign Up Now</a>
+    {% endif %}
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 Home Workout Generator 🏋️‍♀️</p>
+      <div class="links">
+        <a href="{% url 'register' %}">Register</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generate Workout</title>
+  <style>
+    /* Reset some default styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+      min-height: 100vh;
+      color: #333;
+      padding-top: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #1f2937; /* Darker navy */
+      color: #fff;
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 999;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo a {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: 2px;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+    .logo a:hover {
+      color: #4ade80;
+    }
+
+    .form1 {
+      background-color: #4ade80;
+      color: #1f2937;
+      font-weight: 700;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .form1:hover {
+      background-color: #22c55e;
+      color: white;
+    }
+
+    nav ul {
+      display: flex;
+      gap: 1.8rem;
+      list-style: none;
+    }
+
+    nav a {
+      color: #d1d5db;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      user-select: none;
+    }
+    nav a:hover,
+    nav a:focus {
+      background-color: #4ade80;
+      color: #1f2937;
+      outline: none;
+    }
+
+
+
+    nav .btn-nav {
+      background-color: #4ade80;
+      color: #1f2937;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    nav .btn-nav:hover {
+      background-color: #22c55e;
+      color: white;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      color: #0f172a;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .form2 {
+      background: white;
+      padding: 2.5rem 3rem;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      max-width: 420px;
+      width: 90%;
+      margin-bottom: 3rem;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .form2:hover {
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    }
+
+    .form2 button {
+      background: #4ade80;
+      color: #1f2937;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+      margin-top: 1rem;
+      box-shadow: 0 4px 8px rgba(74, 222, 128, 0.4);
+    }
+
+    .form2 button:hover {
+      background: #22c55e;
+      box-shadow: 0 6px 12px rgba(34, 197, 94, 0.6);
+    }
+
+    .workout-plan {
+      background: white;
+      padding: 2rem 3rem;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+      max-width: 700px;
+      width: 90%;
+      margin-bottom: 3rem;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .workout-plan h2 {
+      color: #1e293b;
+      margin-bottom: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      border-bottom: 3px solid #4ade80;
+      padding-bottom: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .workout-plan p {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #334155;
+    }
+
+    .workout-plan h3 {
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    .workout-plan ul {
+      list-style: none;
+      padding-left: 1rem;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .workout-plan li {
+      background: #f0f9ff;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      border-left: 6px solid #4ade80;
+      font-size: 1rem;
+      color: #1e293b;
+      box-shadow: 0 2px 6px rgba(74, 222, 128, 0.25);
+      transition: background-color 0.3s ease;
+    }
+
+    .workout-plan li:hover {
+      background-color: #d1fae5;
+    }
+
+    .timer-container {
+      background: #2563eb;
+      color: white;
+      padding: 2rem 3rem;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      margin-bottom: 3rem;
+      user-select: none;
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    #timer {
+      font-size: 4rem;
+      font-weight: 900;
+      letter-spacing: 5px;
+      margin: 1rem 0;
+      font-family: 'Courier New', Courier, monospace;
+      text-shadow: 1px 1px 6px rgba(0,0,0,0.3);
+    }
+
+    #startTimerBtn {
+      background-color: #4ade80;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #1f2937;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 6px 12px rgba(74, 222, 128, 0.6);
+    }
+
+    #startTimerBtn:hover {
+      background-color: #22c55e;
+      box-shadow: 0 8px 16px rgba(34, 197, 94, 0.7);
+    }
+
+    .spotify-container {
+      max-width: 350px;
+      width: 90%;
+      box-shadow: 0 8px 25px rgba(30, 58, 138, 0.4);
+      border-radius: 20px;
+      overflow: hidden;
+      animation: fadeInUp 1.2s ease forwards;
+      margin-bottom: 5rem;
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .workout-plan ul::-webkit-scrollbar {
+      width: 8px;
+    }
+    .workout-plan ul::-webkit-scrollbar-track {
+      background: #e0f2fe;
+      border-radius: 10px;
+    }
+    .workout-plan ul::-webkit-scrollbar-thumb {
+      background: #4ade80;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="logo"><a href="{% url 'home' %}">Workout Generator</a></div>
+      <nav class="nav">
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="{% url 'generate-form' %}">Workouts</a></li>
+          <li><a href="{% url 'videos' %}">Videos</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            <li>
+              <form method="post" action="{% url 'logout' %}" style="display:inline;" class="'form1">
+                {% csrf_token %}
+                <button type="submit" class="btn-nav" style="margin-left: 0.5rem;">Logout</button>
+              </form>
+            </li>
+          {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'register' %}" class="btn-nav">Register</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <h1>Generate Workout</h1>
+
+  <form method="post" novalidate class="form2">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Generate Workout</button>
+  </form>
+
+  {% if workout_plan %}
+  <div class="workout-plan" role="region" aria-labelledby="plan-title">
+    <h2 id="plan-title">Your Workout Plan</h2>
+    <p><strong>Duration:</strong> {{ workout_plan.duration }} minutes</p>
+    <p><strong>Category:</strong> {{ workout_plan.category }}</p>
+    <p><strong>Difficulty:</strong> {{ workout_plan.difficulty }}</p>
+
+    <h3>Exercises</h3>
+    <ul>
+      {% for exercise in workout_plan.exercises.all %}
+        <li>
+          <strong>{{ exercise.name }}</strong>: {{ exercise.description }}
+        </li>
+      {% empty %}
+        <li>No exercises found for this plan.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="timer-container" role="region" aria-live="polite" aria-label="Workout timer">
+    <h3>Workout Timer</h3>
+    <div id="timer">00:00</div>
+    <button id="startTimerBtn">Start Timer</button>
+  </div>
+
+  <div class="spotify-container">
+    <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP" width="100%" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+  </div>
+  {% endif %}
+
+
+<script>
+  const startBtn = document.getElementById('startTimerBtn');
+  const timerDisplay = document.getElementById('timer');
+
+  let timer;
+  let totalSeconds = 0;
+
+  startBtn?.addEventListener('click', () => {
+    if (!totalSeconds) {
+      // Safely get durationMinutes from Django context
+      const durationMinutes = {{ workout_plan.duration|default:0 }};
+      totalSeconds = durationMinutes * 60;
+      if (totalSeconds <= 0) {
+        alert('Invalid workout duration');
+        return;
+      }
+    }
+    if (startBtn.getAttribute('aria-pressed') === 'true') {
+      clearInterval(timer);
+      startBtn.setAttribute('aria-pressed', 'false');
+      startBtn.textContent = 'Start Timer';
+    } else {
+      startBtn.setAttribute('aria-pressed', 'true');
+      startBtn.textContent = 'Pause Timer';
+
+      timer = setInterval(() => {
+        if (totalSeconds <= 0) {
+          clearInterval(timer);
+          timerDisplay.textContent = "Time's up!";
+          startBtn.setAttribute('aria-pressed', 'false');
+          startBtn.textContent = 'Start Timer';
+          return;
+        }
+        totalSeconds--;
+        let minutes = Math.floor(totalSeconds / 60);
+        let seconds = totalSeconds % 60;
+        timerDisplay.textContent =
+          String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+      }, 1000);
+    }
+  });
+</script>
+</body>
+</html>
