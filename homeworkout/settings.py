@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-gs%z#7w+njxjyj!hpogqfc8mv2k31mj(5w)qn-vf0j)3ld+uli
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -79,7 +79,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'homeworkout.wsgi.application'
 STATIC_URL = 'static/'
 
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -141,4 +141,4 @@ LOGIN_URL = '/users/login/'
 #     os.path.join(BASE_DIR, 'static'),
 # ]
 
-ALLOWED_HOSTS = ['*']
+
