@@ -310,10 +310,11 @@
       <nav class="nav">
         <ul>
           <li><a href="#features">Features</a></li>
-          <li><a href="{% url 'generate-form' %}">Workouts</a></li>
           <li><a href="{% url 'videos' %}">Videos</a></li>
           {% if user.is_authenticated %}
+            <li><a href="{% url 'generate-form' %}">Workouts</a></li>
             <li><a href="{% url 'profile' %}">Profile</a></li>
+            
             <li>
               <form method="post" action="{% url 'logout' %}" style="display:inline;">
                 {% csrf_token %}
